@@ -26,7 +26,7 @@ For Gradle (Kotlin DSL), add it to your `build.gradle.kts` file.
 
 <dependencies>
     <dependency>
-        <groupId>com.example</groupId>
+        <groupId>io.github.matbarr</groupId>
         <artifactId>beam</artifactId>
         <version>1.0.0</version>
     </dependency>
@@ -40,7 +40,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.example:beam:1.0.0'
+    implementation 'io.github.matbarr:beam:1.0.0'
 }
 ```
 
@@ -51,7 +51,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.example:beam:1.0.0")
+    implementation("io.github.matbarr:beam:1.0.0")
 }
 ```
 
