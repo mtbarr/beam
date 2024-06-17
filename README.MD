@@ -1,4 +1,4 @@
-# Still Under Development!
+# Still under development!
 # Beam
 
 Beam is an implementation-agnostic messaging library designed to provide a core framework for message handling. This allows for easy integration with various messaging systems such as Redis Pub/Sub, RabbitMQ, Amazon SNS, and more. The library is designed to be flexible, making it easy to switch between different messaging systems without changing your core application logic.
