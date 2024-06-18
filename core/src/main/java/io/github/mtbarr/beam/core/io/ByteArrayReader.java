@@ -2,7 +2,7 @@ package io.github.mtbarr.beam.core.io;
 
 import java.nio.ByteBuffer;
 
-public class ByteArrayReader {
+public class ByteArrayReader implements AutoCloseable {
 
     public static ByteArrayReader read(byte[] bytes) {
         ByteArrayReader reader = new ByteArrayReader(bytes.length);
@@ -59,5 +59,10 @@ public class ByteArrayReader {
         int length = readInt();
         byte[] bytes = readBytes(length);
         return new String(bytes);
+    }
+
+    @Override
+    public void close() {
+        byteBuffer.clear();
     }
 }

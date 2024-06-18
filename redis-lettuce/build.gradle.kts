@@ -10,5 +10,12 @@ repositories {
 
 dependencies {
     implementation(projects.core)
-    implementation(libs.jedis)
+    implementation(libs.lettuce)
+
+    testImplementation(libs.junit.api)
+    testImplementation(libs.junit.engine)
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
 }

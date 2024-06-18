@@ -21,6 +21,7 @@ public abstract class BeamMessageBroker {
     private final Map<String, Class<?>> nameToClassMap = new HashMap<>();
 
     protected final MessageAdapterContainer messageAdapterContainer = new MessageAdapterContainer();
+
     private final Map<String, Map<Class<?>, MessageSubscriber<?>>> subscribers = new HashMap<>();
 
 
@@ -31,22 +32,18 @@ public abstract class BeamMessageBroker {
         registerMessageClass(messageClass);
     }
 
-
     public void unregisterMessageAdapter(@NotNull MessageAdapter<?> messageAdapter) {
         messageAdapterContainer.removeMessageAdapter(messageAdapter.getMessageClass());
     }
-
 
     @Nullable
     public <T extends Message> MessageAdapter<T> getMessageAdapter(@NotNull Class<T> messageClass) {
         return messageAdapterContainer.getMessageAdapter(messageClass);
     }
 
-
     public void removeMessageAdapter(@NotNull Class<?> messageClass) {
         messageAdapterContainer.removeMessageAdapter(messageClass);
     }
-
 
     public abstract void publishMessage(@NotNull String subscriber, @NotNull Message message);
 
@@ -78,7 +75,6 @@ public abstract class BeamMessageBroker {
         subscribers.put(subscriberId, map);
     }
 
-
     protected <M extends Message> void unregisterSubscriber(@NotNull String subscriberId, Class<M> clazz) {
         Map<Class<?>, MessageSubscriber<?>> map = subscribers.get(subscriberId);
         if (map.isEmpty()) {
@@ -87,7 +83,6 @@ public abstract class BeamMessageBroker {
 
         map.remove(clazz);
     }
-
 
     public void unregisterAllSubscribers(@NotNull String subscriberId) {
         subscribers.remove(subscriberId);

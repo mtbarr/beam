@@ -8,6 +8,10 @@ repositories {
 }
 
 dependencies {
-    implementation(libs.jetbrains.annotations)
-    implementation(libs.bundles.test)
+    api(libs.jetbrains.annotations)
+    testImplementation(libs.bundles.test)
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
 }

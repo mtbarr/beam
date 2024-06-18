@@ -2,7 +2,7 @@ package io.github.mtbarr.beam.core.io;
 
 import java.nio.ByteBuffer;
 
-public class ByteArrayWriter {
+public class ByteArrayWriter implements AutoCloseable {
 
 
     public static ByteArrayWriter newByteArrayWriter() {
@@ -62,5 +62,10 @@ public class ByteArrayWriter {
         byte[] bytes = new byte[byteBuffer.remaining()];
         byteBuffer.get(bytes);
         return bytes;
+    }
+
+    @Override
+    public void close() {
+        byteBuffer.clear();
     }
 }

@@ -20,7 +20,7 @@ plugins {
 
 include(
     "core",
-    "redis",
+    "redis-lettuce",
     "rabbitmq",
     "sns"
 )

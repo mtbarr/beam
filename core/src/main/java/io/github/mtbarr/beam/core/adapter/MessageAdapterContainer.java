@@ -1,5 +1,7 @@
 package io.github.mtbarr.beam.core.adapter;
 
+import io.github.mtbarr.beam.core.common.StringMessage;
+import io.github.mtbarr.beam.core.common.StringMessageAdapter;
 import io.github.mtbarr.beam.core.message.Message;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -13,7 +15,9 @@ import java.util.Map;
  */
 public class MessageAdapterContainer {
 
-    private final Map<Class<?>, MessageAdapter<?>> messageAdapters = new LinkedHashMap<>();
+    private final Map<Class<?>, MessageAdapter<?>> messageAdapters = new LinkedHashMap<>() {{
+        put(StringMessage.class, new StringMessageAdapter());
+    }};
 
     /**
      * This method is used to add a new adapter to the map.
