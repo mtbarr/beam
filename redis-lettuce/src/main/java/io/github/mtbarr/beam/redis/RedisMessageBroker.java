@@ -9,7 +9,6 @@ import io.github.mtbarr.beam.core.message.Message;
 import io.github.mtbarr.beam.core.subscriber.MessageSubscriber;
 import io.github.mtbarr.beam.redis.source.RedisSource;
 import io.lettuce.core.RedisClient;
-import io.lettuce.core.RedisFuture;
 import io.lettuce.core.codec.ByteArrayCodec;
 import io.lettuce.core.pubsub.RedisPubSubAdapter;
 import io.lettuce.core.pubsub.StatefulRedisPubSubConnection;
@@ -40,19 +39,29 @@ public class RedisMessageBroker extends BeamMessageBroker {
             }
 
             messageAdapter.encode(message, writer);
-
             stringStringStatefulRedisPubSubConnection.async().publish(subscriber.getBytes(), writer.toByteArray());
         }
     }
 
     @Override
-    public <M extends Message> void subscribe(@NotNull String subscriberId, Class<M> clazz, @NotNull MessageSubscriber<M> subscriber) {
+    public <M extends Message> void subscribe(
+      @NotNull String subscriberId,
+      Class<M> clazz,
+      @NotNull MessageSubscriber<M> subscriber
+    ) {
 
+        RedisClient client = redisSource.getClient();
+
+        StatefulRedisPubSubConnection<byte[], byte[]> pubSubConnection = client.connectPubSub(ByteArrayCodec.INSTANCE);
+        pubSubConnection.addListener(new InternalPubSubListener<>(clazz, subscriberId));
+        pubSubConnection.async().subscribe(subscriberId.getBytes());
     }
 
     @Override
     public <M extends Message> void unsubscribe(@NotNull String subscriberId, Class<M> clazz) {
-
+        RedisClient client = redisSource.getClient();
+        StatefulRedisPubSubConnection<byte[], byte[]> pubSubConnection = client.connectPubSub(ByteArrayCodec.INSTANCE);
+        pubSubConnection.async().unsubscribe(subscriberId.getBytes());
     }
 
     class InternalPubSubListener<M extends Message> extends RedisPubSubAdapter<byte[], byte[]> {
