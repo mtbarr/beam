@@ -45,7 +45,7 @@ public abstract class BeamMessageBroker {
         messageAdapterContainer.removeMessageAdapter(messageClass);
     }
 
-    public abstract void publishMessage(@NotNull String subscriber, @NotNull Message message);
+    public abstract <M extends Message> void publishMessage(@NotNull String subscriber, @NotNull M message);
 
     public abstract <M extends Message> void subscribe(@NotNull String subscriberId, Class<M> clazz, @NotNull MessageSubscriber<M> subscriber);
 
@@ -53,6 +53,10 @@ public abstract class BeamMessageBroker {
 
     protected void registerMessageClass(@NotNull Class<?> clazz) {
         nameToClassMap.put(clazz.getName(), clazz);
+    }
+
+    protected MessageAdapter<? extends Message> findMessageFromClass(@NotNull Class<? extends Message> clazz) {
+         return messageAdapterContainer.getMessageAdapter(clazz);
     }
 
     @Nullable

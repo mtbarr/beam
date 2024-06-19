@@ -26,20 +26,21 @@ public class RedisMessageBroker extends BeamMessageBroker {
     }
 
     @Override
-    public void publishMessage(@NotNull String subscriber, @NotNull Message message) {
+    public <M extends Message> void publishMessage(@NotNull String subscriber, @NotNull M message) {
         RedisClient client = redisSource.getClient();
-        StatefulRedisPubSubConnection<byte[], byte[]> stringStringStatefulRedisPubSubConnection = client.connectPubSub(ByteArrayCodec.INSTANCE);
 
-        try (ByteArrayWriter writer = ByteArrayWriter.newByteArrayWriter()) {
-            writer.writeString(message.getClass().getName());
+        try (ByteArrayWriter byteArrayWriter = ByteArrayWriter.newByteArrayWriter()) {
+            byteArrayWriter.writeString(message.getClass().getName());
 
-            MessageAdapter<Message> messageAdapter = getMessageAdapter(Message.class);
+            MessageAdapter<M> messageAdapter = getMessageAdapter((Class<M>) message.getClass());
             if (messageAdapter == null) {
-                throw new MessageAdapterNotFoundException("Message adapter not found for class: " + Message.class.getName());
+                throw new MessageAdapterNotFoundException("Message adapter not found for class: " + message.getClass().getName());
             }
 
-            messageAdapter.encode(message, writer);
-            stringStringStatefulRedisPubSubConnection.async().publish(subscriber.getBytes(), writer.toByteArray());
+            messageAdapter.encode(message, byteArrayWriter);
+
+            client.connectPubSub(ByteArrayCodec.INSTANCE).async()
+              .publish(subscriber.getBytes(), byteArrayWriter.toByteArray());
         }
     }
 
